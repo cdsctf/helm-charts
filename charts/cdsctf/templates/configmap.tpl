@@ -16,7 +16,7 @@ data:
 
     [db]
     host = {{ .Values.server.config.db.host | quote }}
-    port = {{ .Values.server.config.db.port | default 5432 }}}
+    port = {{ .Values.server.config.db.port | default 5432 }}
     dbname = {{ .Values.server.config.db.dbname | quote }}
     username = {{ .Values.server.config.db.username | quote }}
     password = {{ .Values.server.config.db.password | quote }}
