@@ -1,0 +1,16 @@
+apiVersion: v2
+name: cdsctf
+description: The CdsCTF project is an innovative and high-performance CTF platform.
+type: application
+version: 1.0.0
+appVersion: 1.7.0
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - ctf
+home: https://cdsctf.e23.dev
+sources:
+  - https://github.com/ElaBosak233/cdsctf
+  - https://github.com/cdsctf/helm-charts
+maintainers:
+  - name: Ela
+    email: i@e23.dev

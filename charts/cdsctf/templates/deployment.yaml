@@ -1,0 +1,171 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ include "cdsctf.namespace" . }}
+spec:
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      serviceAccountName: server-sa
+      containers:
+        - name: server
+          image: {{ .Values.server.image }}
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - name: server-storage
+              mountPath: /app/data/media
+            - name: server-config
+              mountPath: /etc/cdsctf/config.toml
+              subPath: config.toml
+      volumes:
+        - name: server-storage
+          persistentVolumeClaim:
+            claimName: server-pvc
+        - name: server-config
+          configMap:
+            name: server-config
+---
+
+{{- if .Values.db.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: {{ include "cdsctf.namespace" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.db.image }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.db.env.POSTGRES_USER | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.db.env.POSTGRES_PASSWORD | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.db.env.POSTGRES_DB | quote }}
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/18/docker
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: db-pvc
+---
+{{- end }}
+
+{{- if .Values.queue.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queue
+  namespace: {{ include "cdsctf.namespace" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: queue
+  template:
+    metadata:
+      labels:
+        app: queue
+    spec:
+      containers:
+        - name: queue
+          image: {{ .Values.queue.image }}
+          args:
+            - "--http_port=8222"
+            - "--js"
+            - "--sd=/data"
+            {{- with .Values.queue.additionalArgs }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - containerPort: 4222
+          volumeMounts:
+            - name: queue-storage
+              mountPath: /data
+      volumes:
+        - name: queue-storage
+          persistentVolumeClaim:
+            claimName: queue-pvc
+---
+{{- end }}
+
+{{- if .Values.cache.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache
+  namespace: {{ include "cdsctf.namespace" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache
+  template:
+    metadata:
+      labels:
+        app: cache
+    spec:
+      containers:
+        - name: cache
+          image: {{ .Values.cache.image }}
+          volumeMounts:
+            - name: cache-storage
+              mountPath: /data
+      volumes:
+        - name: cache-storage
+          persistentVolumeClaim:
+            claimName: cache-pvc
+---
+{{- end }}
+
+{{- if .Values.otel.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel
+  namespace: {{ include "cdsctf.namespace" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel
+  template:
+    metadata:
+      labels:
+        app: otel
+    spec:
+      containers:
+        - name: otel
+          image: {{ .Values.otel.image }}
+          args: ["--config", "/etc/otel/config.yaml"]
+          volumeMounts:
+            - name: otel-config
+              mountPath: /etc/otel/config.yaml
+              subPath: config.yaml
+      volumes:
+        - name: otel-config
+          configMap:
+            name: otel-config
+---
+{{- end }}

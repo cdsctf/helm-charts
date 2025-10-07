@@ -1,0 +1,18 @@
+{{- if .Values.server.serviceAccount.clusterRoleBinding.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: server-crb
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    {{- include "cdsctf.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.server.serviceAccount.clusterRoleBinding.clusterRole }}
+subjects:
+  - kind: ServiceAccount
+    name: server-sa
+    namespace: {{ include "cdsctf.namespace" . }}
+---
+{{- end -}}

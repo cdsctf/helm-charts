@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    app: server
+  {{- with .Values.server.service.annotations }}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.server.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with .Values.server.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  ports:
+    - port: 8888
+      protocol: TCP
+      {{- if eq .Values.server.service.type "NodePort" }}
+      nodePort: {{ .Values.server.service.nodePort | default 30001 }}
+      {{- end }}
+  selector:
+    app: server
+  type: {{ .Values.server.service.type | default "ClusterIP" }}
+---
+
+{{- if .Values.db.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    app: db
+spec:
+  ports:
+    - port: 5432
+      protocol: TCP
+  selector:
+    app: db
+  type: ClusterIP
+---
+{{- end }}
+
+{{- if .Values.queue.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: queue
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    app: queue
+spec:
+  ports:
+    - port: 4222
+      protocol: TCP
+  selector:
+    app: queue
+  type: ClusterIP
+---
+{{- end }}
+
+{{- if .Values.cache.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    app: cache
+spec:
+  ports:
+    - port: 6379
+      protocol: TCP
+  selector:
+    app: cache
+  type: ClusterIP
+---
+{{- end }}

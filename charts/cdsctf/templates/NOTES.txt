@@ -1,0 +1,2 @@
+For more information on running CdsCTF, please visit:
+https://cdsctf.e23.dev
