@@ -4,7 +4,7 @@ namespaceOverride: ""
 extraLabels: {}
 
 server:
-  image: docker.io/elabosak233/cdsctf:latest
+  image: docker.io/elabosak233/cdsctf:1.8.1
   replicas: 1
 
   config:
@@ -58,7 +58,7 @@ server:
 
 db:
   enabled: true
-  image: docker.io/library/postgres:alpine
+  image: docker.io/library/postgres:18-alpine
   env:
     POSTGRES_USER: cdsctf
     POSTGRES_PASSWORD: cdsctf
@@ -70,7 +70,7 @@ db:
 
 queue:
   enabled: true
-  image: docker.io/library/nats:alpine
+  image: docker.io/library/nats:2-alpine
   additionalArgs: []
 
   persistence:
@@ -79,7 +79,7 @@ queue:
 
 cache:
   enabled: true
-  image: docker.io/valkey/valkey:alpine
+  image: docker.io/valkey/valkey:9-alpine
 
   persistence:
     size: 1Gi
