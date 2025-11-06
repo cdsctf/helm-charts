@@ -4,7 +4,7 @@ namespaceOverride: ""
 extraLabels: {}
 
 server:
-  image: docker.io/elabosak233/cdsctf:1.8.1
+  image: docker.io/elabosak233/cdsctf:1.8.2
   replicas: 1
 
   config:
@@ -37,7 +37,7 @@ server:
 
   persistence:
     size: 128Gi
-    storageClass: ""
+    storageClass: "local-path"
 
   service:
     type: ClusterIP # ClusterIP | NodePort | LoadBalancer | ExternalName
@@ -66,7 +66,7 @@ db:
 
   persistence:
     size: 8Gi
-    storageClass: ""
+    storageClass: "local-path"
 
 queue:
   enabled: true
@@ -75,7 +75,7 @@ queue:
 
   persistence:
     size: 1Gi
-    storageClass: ""
+    storageClass: "local-path"
 
 cache:
   enabled: true
@@ -83,7 +83,7 @@ cache:
 
   persistence:
     size: 1Gi
-    storageClass: ""
+    storageClass: "local-path"
 
 otel:
   enabled: false
