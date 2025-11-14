@@ -4,7 +4,7 @@ namespaceOverride: ""
 extraLabels: {}
 
 server:
-  image: docker.io/elabosak233/cdsctf:1.8.2
+  image: docker.io/elabosak233/cdsctf:1.8.4
   replicas: 1
 
   config:

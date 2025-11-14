@@ -2,8 +2,8 @@ apiVersion: v2
 name: cdsctf
 description: The CdsCTF project is an innovative and high-performance CTF platform.
 type: application
-version: 1.0.1
-appVersion: 1.8.2
+version: 1.0.2
+appVersion: 1.8.4
 kubeVersion: ">=1.22.0-0"
 keywords:
   - ctf
