@@ -34,7 +34,7 @@ data:
     path = "./data/media"
 
     [logger]
-    level = "info,sqlx=debug,sea_orm=debug,cds_web=debug"
+    level = "info,sqlx=debug,sea_orm=debug,cds_server=debug"
 
     [cache]
     url = {{ .Values.server.config.cache.url | quote }}
