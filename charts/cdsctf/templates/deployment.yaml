@@ -17,21 +17,22 @@ spec:
       containers:
         - name: server
           image: {{ .Values.server.image }}
+          env:
+            {{- if .Values.server.env }}
+            {{- range $name, $value := .Values.server.env }}
+            - name: {{ $name | quote }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
           ports:
             - containerPort: 8888
           volumeMounts:
             - name: server-storage
               mountPath: /app/data/media
-            - name: server-config
-              mountPath: /etc/cdsctf/config.toml
-              subPath: config.toml
       volumes:
         - name: server-storage
           persistentVolumeClaim:
             claimName: server-pvc
-        - name: server-config
-          configMap:
-            name: server-config
 ---
 
 {{- if .Values.db.enabled }}
@@ -136,36 +137,5 @@ spec:
         - name: cache-storage
           persistentVolumeClaim:
             claimName: cache-pvc
----
-{{- end }}
-
-{{- if .Values.otel.enabled }}
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: otel
-  namespace: {{ include "cdsctf.namespace" . }}
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: otel
-  template:
-    metadata:
-      labels:
-        app: otel
-    spec:
-      containers:
-        - name: otel
-          image: {{ .Values.otel.image }}
-          args: ["--config", "/etc/otel/config.yaml"]
-          volumeMounts:
-            - name: otel-config
-              mountPath: /etc/otel/config.yaml
-              subPath: config.yaml
-      volumes:
-        - name: otel-config
-          configMap:
-            name: otel-config
 ---
 {{- end }}
