@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   cdsctf:
   - apiVersion: v2
+    appVersion: 1.9.2
+    created: "2026-03-22T03:31:34.432291406Z"
+    description: The CdsCTF project is an innovative and high-performance CTF platform.
+    digest: 1f2dd46de8431c16cc48f5bf963c92845e46a93cfe74cc7690ab0b65eabf7b0f
+    home: https://cdsctf.e23.dev
+    keywords:
+    - ctf
+    kubeVersion: '>=1.22.0-0'
+    maintainers:
+    - email: i@e23.dev
+      name: Ela
+    name: cdsctf
+    sources:
+    - https://github.com/ElaBosak233/cdsctf
+    - https://github.com/cdsctf/helm-charts
+    type: application
+    urls:
+    - https://github.com/cdsctf/helm-charts/releases/download/cdsctf-1.0.4/cdsctf-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
     appVersion: 1.8.6
     created: "2026-01-30T10:14:53.940299499Z"
     description: The CdsCTF project is an innovative and high-performance CTF platform.
@@ -81,4 +101,4 @@ entries:
     urls:
     - https://github.com/cdsctf/helm-charts/releases/download/cdsctf-1.0.0/cdsctf-1.0.0.tgz
     version: 1.0.0
-generated: "2026-01-30T10:14:53.940318224Z"
+generated: "2026-03-22T03:31:34.432311695Z"
