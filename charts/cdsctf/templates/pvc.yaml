@@ -71,3 +71,22 @@ spec:
   storageClassName: {{ .Values.cache.persistence.storageClass }}
 ---
 {{- end }}
+
+{{- if .Values.media.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    app: media
+    {{- include "cdsctf.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.media.persistence.size }}
+  storageClassName: {{ .Values.media.persistence.storageClass }}
+---
+{{- end }}

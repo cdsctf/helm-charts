@@ -4,15 +4,18 @@ namespaceOverride: ""
 extraLabels: {}
 
 server:
-  image: docker.io/elabosak233/cdsctf:1.8.6
+  image: docker.io/elabosak233/cdsctf:1.9.2
   replicas: 1
 
-  env:
-    CDSCTF_OBSERVE__SERVICE_NAME: "cdsctf"
-
   persistence:
-    size: 128Gi
+    size: 10Gi
     storageClass: "local-path"
+
+  env:
+    # Observability configuration
+    CDSCTF_OBSERVE__SERVICE_NAME: "cdsctf"
+    CDSCTF_OBSERVE__LOGGER__LEVEL: "info"
+    CDSCTF_OBSERVE__EXPORTER__ENABLED: "false"
 
   service:
     type: ClusterIP # ClusterIP | NodePort | LoadBalancer | ExternalName
@@ -58,4 +61,12 @@ cache:
 
   persistence:
     size: 1Gi
+    storageClass: "local-path"
+
+media:
+  enabled: true
+  image: docker.io/rustfs/rustfs:latest
+
+  persistence:
+    size: 128Gi
     storageClass: "local-path"

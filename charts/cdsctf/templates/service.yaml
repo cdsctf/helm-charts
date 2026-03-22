@@ -81,3 +81,21 @@ spec:
   type: ClusterIP
 ---
 {{- end }}
+
+{{- if .Values.media.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: media
+  namespace: {{ include "cdsctf.namespace" . }}
+  labels:
+    app: media
+spec:
+  ports:
+    - port: 9000
+      protocol: TCP
+  selector:
+    app: media
+  type: ClusterIP
+---
+{{- end }}

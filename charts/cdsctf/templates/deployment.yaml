@@ -26,6 +26,22 @@ spec:
             {{- end }}
           ports:
             - containerPort: 8888
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8888
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
           volumeMounts:
             - name: server-storage
               mountPath: /app/data/media
@@ -137,5 +153,41 @@ spec:
         - name: cache-storage
           persistentVolumeClaim:
             claimName: cache-pvc
+---
+{{- end }}
+
+{{- if .Values.media.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media
+  namespace: {{ include "cdsctf.namespace" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media
+  template:
+    metadata:
+      labels:
+        app: media
+    spec:
+      containers:
+        - name: media
+          image: {{ .Values.media.image }}
+          env:
+            - name: RUSTFS_ADMIN_USER
+              value: "rustfsadmin"
+            - name: RUSTFS_ADMIN_PASSWORD
+              value: "rustfsadmin"
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: media-storage
+              mountPath: /data
+      volumes:
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: media-pvc
 ---
 {{- end }}
