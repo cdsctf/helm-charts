@@ -4,7 +4,7 @@ namespaceOverride: ""
 extraLabels: {}
 
 server:
-  image: docker.io/elabosak233/cdsctf:1.9.2
+  image: docker.io/elabosak233/cdsctf:1.10.0
   replicas: 1
 
   persistence:
